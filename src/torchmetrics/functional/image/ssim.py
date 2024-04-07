@@ -110,7 +110,7 @@ def _ssim_update(
         raise ValueError(f"Expected `sigma` to have positive number. Got {sigma}.")
 
     if data_range is None:
-        data_range = max(preds.max() - preds.min(), target.max() - target.min())  # type: ignore[call-overload]
+        data_range = torch.max(preds.max() - preds.min(), target.max() - target.min())  # type: ignore[call-overload]
     elif isinstance(data_range, tuple):
         preds = torch.clamp(preds, min=data_range[0], max=data_range[1])
         target = torch.clamp(target, min=data_range[0], max=data_range[1])
@@ -386,7 +386,7 @@ def _multiscale_ssim_update(
             f" larger than or equal to {2 ** len(betas)}."
         )
 
-    _betas_div = max(1, (len(betas) - 1)) ** 2
+    _betas_div = torch.max(1, (len(betas) - 1)) ** 2
     if preds.size()[-2] // _betas_div <= kernel_size[0] - 1:
         raise ValueError(
             f"For a given number of `betas` parameters {len(betas)} and kernel size {kernel_size[0]},"
